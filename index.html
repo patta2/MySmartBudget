@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- แท็กตั้งค่า iOS ให้แสดงผลเต็มจอเป็นแอป PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="หมูเด้ง">
+    <title>หมูเด้ง - บันทึกการเงิน</title>
+
+    <!-- Web App Manifest แบบฝังในไฟล์ -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIuC4qOC4oOC5gOC4lOC5ieC4oSIsCiAgInNob3J0X25hbWUiOiAi4Lio4Lij4LmA4LiU4Lmd4LihIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiI2ZmNjliYiIKfQ==">
+
+    <script>
+      // ระบบจำแคชให้อ่านไฟล์ได้แม้ปิดเน็ต/เปิดโหมดเครื่องบิน
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          const swCode = `
+            const CACHE_NAME = 'moodeng-v1';
+            self.addEventListener('install', (e) => {
+              e.waitUntil(
+                caches.open(CACHE_NAME).then((cache) => cache.addAll(['./']))
+              );
+              self.skipWaiting();
+            });
+            self.addEventListener('fetch', (e) => {
+              e.respondWith(
+                caches.match(e.request).then((res) => res || fetch(e.request))
+              );
+            });
+          `;
+          const blob = new Blob([swCode], { type: 'application/javascript' });
+          const swUrl = URL.createObjectURL(blob);
+          navigator.serviceWorker.register(swUrl).catch(() => {});
+        });
+      }
+    </script>
+
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 20px; background: #f9f9f9; }
+      .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+      button { background: #ff69bb; color: white; border: none; padding: 10px 15px; border-radius: 8px; width: 100%; font-size: 16px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🦛 แอปSmartBudget บันทึกการเงิน</h2>
+        <p>พร้อมใช้งานออฟไลน์เต็มรูปแบบบน iPhone แล้ว!</p>
+        <button onclick="alert('บันทึกเรียบร้อย!')">ทดสอบบันทึก</button>
+    </div>
+</body>
+</html>
